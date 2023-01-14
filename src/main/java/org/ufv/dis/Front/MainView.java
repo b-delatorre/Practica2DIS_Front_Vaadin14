@@ -63,9 +63,10 @@ public class MainView extends VerticalLayout {
         // Configuramos un evento para la seleccion de pestaña
         pestanas.addSelectedChangeListener(event ->
             {
-                if (pestanas.equals(tabGeneral)) {
+                if (event.getSelectedTab().equals(tabGeneral)) {
                     // Limpiamos por si hay datos basura
                     results_General.removeAll();
+                    results_Mayores.removeAll();
                     // Obtenemos los datos de la llamda a la api
                     try {
                         grid_General.setItems(service.leeCovidMenor());
@@ -75,7 +76,8 @@ public class MainView extends VerticalLayout {
                     results_General.add(grid_General);
                     contentTabGeneral.add(results_General, formulario_general);
                 }
-                else if (pestanas.equals(tabMayores)) {
+                else if (event.getSelectedTab().equals(tabMayores)) {
+                    results_Mayores.removeAll();
                     results_General.removeAll();
                     try {
                         grid_Mayores.setItems(service.leeCovidMayor());
@@ -87,31 +89,6 @@ public class MainView extends VerticalLayout {
                 }
             }
         );
-
-        if (pestanas.equals(tabGeneral)) {
-            // Limpiamos por si hay datos basura
-            results_General.removeAll();
-            // Obtenemos los datos de la llamda a la api
-            try {
-                grid_General.setItems(service.leeCovidMenor());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            results_General.add(grid_General);
-            contentTabGeneral.add(results_General, formulario_general);
-        }
-        else if (pestanas.equals(tabMayores)) {
-            results_General.removeAll();
-            try {
-                grid_Mayores.setItems(service.leeCovidMayor());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            results_Mayores.add(grid_Mayores);
-            contentTabMayores.add(results_Mayores, formulario_mayores);
-        }
-
-
         add(pestanas, contentTabGeneral, contentTabMayores);
 
         // Configuramos los eventos para seleccion de filas
