@@ -1,5 +1,6 @@
 package org.ufv.dis.Front;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 //import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.tabs.Tabs;
@@ -27,6 +28,7 @@ public class MainView extends VerticalLayout{
         VerticalLayout results_Mayores=new VerticalLayout();
         VerticalLayout Content_Tab_General=new VerticalLayout();  //Creamos el vertical layout que contendrá la pestaña de datos generales
         VerticalLayout Content_tab_Mayor=new VerticalLayout();      //Creamos el vertical layout que contendrá la pestaña de datos mayores
+        VerticalLayout mainView=new VerticalLayout();
         //Tab tab_General = new Tab("Tasa acumulada poblacion general");
         //Tab tab_Mayores = new Tab("Tasa acumulada poblacion mayores de 65");
 
@@ -55,34 +57,60 @@ public class MainView extends VerticalLayout{
         grid_Mayor.addColumn(DataMayor::getTasa14).setHeader("Tasa 14 dias");
         grid_Mayor.addColumn(DataMayor::getZona).setHeader("Zona");
 
-        Button nuevoRegistro = new Button("Nuevo registro", click -> formulario_general.setVisible(true));
+        Button nuevoRegistro_Gen = new Button("Nuevo registro", click -> formulario_general.setVisible(true));
+        Button nuevoRegistro_May=new Button("Nuevo registro",click -> formulario_mayores.setVisible(true));
 
         // Creamos las pestañas
-        Tab tab_General = new Tab("Tasa acumulada poblacion general");
-        Tab tab_Mayores = new Tab("Tasa acumulada poblacion mayores de 65");
+        //Tab tab_General = new Tab("Tasa acumulada poblacion general");
+        //Tab tab_Mayores = new Tab("Tasa acumulada poblacion mayores de 65");
+        HorizontalLayout tabBar = new HorizontalLayout();
+        Button Boton_General = new Button("Tasa acumulada poblacion general");
+        tabBar.add(Boton_General);
+        Button Boton_mayores = new Button("Tasa acumulada poblacion mayores de 65");
+        tabBar.add(Boton_mayores);
+
+        VerticalLayout firstTabLayout = new VerticalLayout();
+        VerticalLayout secondTabLayout = new VerticalLayout();
 
 
-        Tabs Pestanas = new Tabs (); //Creamos el TabSheet Pestanas que contendra las dos Pestañas con las dos secciones
+
+
+
+        //Tabs Pestanas = new Tabs (); //Creamos el TabSheet Pestanas que contendra las dos Pestañas con las dos secciones
 
         results_General.removeAll(); //Por si quedaba algo residual restablecemos la variable results
         grid_General.setItems(service.leeCovidMenor()); //Obtenemos los elementos del grid de la llamada de la api
         results_General.add(grid_General);
-        Content_Tab_General.add(nuevoRegistro, results_General,formulario_general); //Y los añadimos a la pestaña de datos generales
+        Content_Tab_General.add(nuevoRegistro_Gen, results_General,formulario_general); //Y los añadimos a la pestaña de datos generales
 
-        tab_General.add(Content_Tab_General);
+        //tab_General.add(Content_Tab_General);
 
         //Pestanas.add("Tasa acumulada poblacion general",Content_Tab_General);
         //Repetimos lo anterior pero para los datos de personas mayores
         results_Mayores.removeAll();
         grid_Mayor.setItems(service.leeCovidMayor());
         results_Mayores.add(grid_Mayor);
-        Content_tab_Mayor.add(results_Mayores,formulario_mayores);
-        tab_Mayores.add(Content_tab_Mayor);
+        Content_tab_Mayor.add(nuevoRegistro_May,results_Mayores,formulario_mayores);
+        mainView.add(tabBar);
+        mainView.add(Content_Tab_General);
+        Boton_General.addClickListener(event -> { //Si el usuario presiona el botón para ir a la otra pestaña sustituimos
+            mainView.remove(Content_tab_Mayor);
+            mainView.add(Content_Tab_General);
+            add(mainView);
+        });
+
+        Boton_mayores.addClickListener(event -> {
+            mainView.remove(Content_Tab_General);
+            mainView.add(Content_tab_Mayor);
+            add(mainView);
+        });
+        add(mainView);
+       // tab_Mayores.add(Content_tab_Mayor);
         //Pestanas.add("Tasa acumulada poblacion mayores de 65",Content_tab_Mayor);
 
-        Pestanas.setSizeFull();
+        //Pestanas.setSizeFull();
 
-        add(Pestanas);
+        //add(Pestanas);
         formulario_general.setVisible(false);
         grid_General.asSingleSelect().addValueChangeListener(event -> {
             if (event.getValue() == null) {
@@ -90,7 +118,9 @@ public class MainView extends VerticalLayout{
             } else {
                 formulario_general.TablaAFormGen(event.getValue());
                 Content_Tab_General.setSizeFull();
-                // Actualizamos el grid
+                grid_General.getDataProvider().refreshItem(formulario_general.get_Dato_General());
+
+
             }
         });
         formulario_mayores.setVisible(false);
@@ -100,6 +130,8 @@ public class MainView extends VerticalLayout{
             } else {
                 formulario_mayores.Tabla_A_FormMayores(event.getValue());
                 Content_tab_Mayor.setSizeFull();
+               // grid_Mayor.getDataProvider().refreshItem(formulario_mayores.get);
+
             }
         });
 

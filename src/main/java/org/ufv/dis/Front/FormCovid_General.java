@@ -42,7 +42,8 @@ public class FormCovid_General extends FormLayout {
 
         binder.bindInstanceFields(this);
 
-        //Aceptar.addClickListener(e -> GuardarCambios());
+        Aceptar.addClickListener(e -> GuardarCambios());
+        //binder.addStatusChangeListener(e -> GuardarCambios().setEnabled(binder.isValid()));
 
     }
 
@@ -50,6 +51,18 @@ public class FormCovid_General extends FormLayout {
         this.dato_General = datoGeneral;
         binder.setBean(datoGeneral);
         setVisible(true);
+    }
+    private void GuardarCambios() {
+        try {
+            binder.writeBean(dato_General);
+            fireEvent(new SaveEvent(this, dato_General));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public Data get_Dato_General(){
+        return dato_General;
     }
 
 }
