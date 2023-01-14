@@ -3,10 +3,12 @@ package org.ufv.dis.Front;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.crud.Crud;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ValidationException;
 
 public class FormCovid_General extends FormLayout {
     private TextField cod = new TextField("codigo_geometria");
@@ -40,7 +42,7 @@ public class FormCovid_General extends FormLayout {
 
         binder.bindInstanceFields(this);
 
-        //Aceptar.addClickListener(e -> GuardarCambios());
+        Aceptar.addClickListener(e -> GuardarCambios());
 
     }
 
@@ -50,4 +52,13 @@ public class FormCovid_General extends FormLayout {
         setVisible(true);
     }
 
+    private void GuardarCambios() {
+        try {
+            binder.writeBean(dato_General);
+           // EVENTO?
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
