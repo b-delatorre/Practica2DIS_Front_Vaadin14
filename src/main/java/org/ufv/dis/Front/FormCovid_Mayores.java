@@ -23,6 +23,7 @@ public class FormCovid_Mayores extends FormLayout {
 
     public FormCovid_Mayores(MainView myUI){
         this.myUI=myUI;
+        cod.setReadOnly(true);
         setSizeUndefined();
 
         Aceptar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -43,5 +44,18 @@ public class FormCovid_Mayores extends FormLayout {
         this.dato_Mayor = dataMayor;
         binder.setBean(dataMayor);
         setVisible(true);
+    }
+    private void GuardarCambios(MainView UI) {
+        try {
+            binder.writeBean(dato_Mayor);
+            fireEvent(new SaveEventMayor(this, dato_Mayor));
+            UI.UpdateGridMayores(dato_Mayor);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public DataMayor get_Dato_General(){
+        return dato_Mayor;
     }
 }

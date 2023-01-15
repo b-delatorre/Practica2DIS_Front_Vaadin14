@@ -1,20 +1,14 @@
 package org.ufv.dis.Front;
 
-import com.vaadin.flow.component.ComponentEvent;
-import com.vaadin.flow.component.ComponentEventBus;
 import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.grid.editor.Editor;
-import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.binder.ValidationException;
 
-public class FormCovid_General extends FormLayout {
+public class FormCovid_Registro extends FormLayout {
     private TextField cod = new TextField("codigo_geometria");
     private TextField zona = new TextField("zona_basica_salud");
     private TextField tasa14 = new TextField("Incidencia_14_dias");
@@ -27,12 +21,13 @@ public class FormCovid_General extends FormLayout {
     private Data dato_General;
     private Binder<Data> binder = new Binder<>(Data.class);
 
-    public FormCovid_General(MainView myUI) {
-
-
+    public FormCovid_Registro(MainView myUI) {
         this.myUI = myUI;
         setSizeUndefined();
         cod.setReadOnly(true);
+        String codLast = myUI.getLastItem().getCod();
+        int codNew = Integer.parseInt(codLast) + 1;
+        cod.setValue(String.valueOf(codNew));
         add(cod, zona, tasa14);
 
         Aceptar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -62,7 +57,7 @@ public class FormCovid_General extends FormLayout {
     private void GuardarCambios(MainView UI) {
         try {
             binder.writeBean(dato_General);
-            fireEvent(new SaveEvent(this, dato_General));
+            fireEvent(new SaveEventRegistro(this, dato_General));
             UI.UpdateGrid(dato_General);
 
         } catch (Exception e) {

@@ -14,7 +14,6 @@ import com.vaadin.flow.router.Route;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 
@@ -27,9 +26,15 @@ public class MainView extends VerticalLayout{
     private Grid<DataMayor> grid_Mayor= new Grid<>(DataMayor.class,false);
     private FormCovid_General formulario_general=new FormCovid_General(this);
     private FormCovid_Mayores formulario_mayores=new FormCovid_Mayores(this);
+    private FormCovid_Registro formulario_nuevoRegistro;
     private VerticalLayout Content_Tab_General=new VerticalLayout();
     private VerticalLayout results_General=new VerticalLayout();
     private VerticalLayout mainView=new VerticalLayout();
+    VerticalLayout results_Mayores=new VerticalLayout();
+    VerticalLayout Content_tab_Mayor=new VerticalLayout();
+
+    private Data lastItem;
+
     public MainView(@Autowired CovidService service) throws URISyntaxException, IOException, InterruptedException {
         //HorizontalLayout inputs=new HorizontalLayout();
         VerticalLayout results_General=new VerticalLayout();
@@ -39,10 +44,6 @@ public class MainView extends VerticalLayout{
 
         //Tab tab_General = new Tab("Tasa acumulada poblacion general");
         //Tab tab_Mayores = new Tab("Tasa acumulada poblacion mayores de 65");
-
-
-
-        FormCovid_General formulario_nuevoRegistro=new FormCovid_General(this);
 
         /*ComboBox<String> comboBox=new ComboBox<>("Seleccione el tipo de info....");
         comboBox.setAllowCustomValue(false);
@@ -66,7 +67,8 @@ public class MainView extends VerticalLayout{
         grid_Mayor.addColumn(DataMayor::getTasa14).setHeader("Tasa 14 dias");
         grid_Mayor.addColumn(DataMayor::getZona).setHeader("Zona");
 
-        Button nuevoRegistro_Gen = new Button("Nuevo registro", click -> formulario_general.setVisible(true));
+        formulario_nuevoRegistro=new FormCovid_Registro(this);
+        Button nuevoRegistro_Gen = new Button("Nuevo registro", click -> formulario_nuevoRegistro.setVisible(true));
         Button nuevoRegistro_May=new Button("Nuevo registro",click -> formulario_mayores.setVisible(true));
 
         // Creamos las pestañas
@@ -171,6 +173,26 @@ public class MainView extends VerticalLayout{
         Content_Tab_General.setVisible(true);
         grid_General.getDataProvider().refreshItem(formulario_general.get_Dato_General());
     }
+    public void UpdateGridMayores(DataMayor UpdatedItem){
+        results_Mayores.setVisible(false);
+        Content_tab_Mayor.setVisible(false);
+        results_Mayores.remove(grid_Mayor);
+        Content_tab_Mayor.remove(results_Mayores);
+        grid_Mayor.setItems(UpdatedItem);
+        results_Mayores.add(grid_Mayor);
+        Content_tab_Mayor.add(results_Mayores);
+        results_Mayores.setVisible(true);
+        Content_tab_Mayor.setVisible(true);
+        grid_Mayor.getDataProvider().refreshItem(formulario_mayores.get_Dato_General());
+    }
+
+    public Data getLastItem() {
+        List<Data> allItems = grid_General.getDataProvider().fetch(new Query<>()).collect(Collectors.toList());
+        lastItem = allItems.stream().sorted((i1,i2) -> i2.getCod().compareTo(i1.getCod())).findFirst().orElse(null);
+        return lastItem;
+    }
+
+
     /*public void onSaveEvent(Data updatedItem) {
 
 
