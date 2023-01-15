@@ -25,10 +25,10 @@ public class FormCovid_Registro extends FormLayout {
         this.myUI = myUI;
         setSizeUndefined();
         cod.setReadOnly(true);
-        String codLast = myUI.getLastItem().getCod();
-        int codNew = Integer.parseInt(codLast) + 1;
-        cod.setValue(String.valueOf(codNew));
-        add(cod, zona, tasa14);
+        //String codLast = myUI.getLastItem().getCod();
+       // int codNew = Integer.parseInt(codLast) + 1;
+        //cod.setValue(String.valueOf(codNew));
+        //add(cod, zona, tasa14);
 
         Aceptar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Aceptar.addClickShortcut(Key.ENTER);

@@ -13,6 +13,7 @@ import com.vaadin.flow.router.Route;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,8 +31,8 @@ public class MainView extends VerticalLayout{
     private VerticalLayout Content_Tab_General=new VerticalLayout();
     private VerticalLayout results_General=new VerticalLayout();
     private VerticalLayout mainView=new VerticalLayout();
-    VerticalLayout results_Mayores=new VerticalLayout();
-    VerticalLayout Content_tab_Mayor=new VerticalLayout();
+    private VerticalLayout results_Mayores=new VerticalLayout();
+    private VerticalLayout Content_tab_Mayor=new VerticalLayout();
 
     private Data lastItem;
 
@@ -148,7 +149,7 @@ public class MainView extends VerticalLayout{
             } else {
                 formulario_mayores.Tabla_A_FormMayores(event.getValue());
                 Content_tab_Mayor.setSizeFull();
-                //grid_Mayor.getDataProvider().refreshItem(formulario_mayores.get);
+                grid_Mayor.getDataProvider().refreshItem(formulario_mayores.get_Dato_General());
                 List<DataMayor> datosNew2 = grid_Mayor.getDataProvider().fetch(new Query<>()).collect(Collectors.toList());
                 try {
                     service.enviaCovidMayor(datosNew2);
@@ -162,35 +163,22 @@ public class MainView extends VerticalLayout{
     }
 
     public void UpdateGrid(Data UpdatedItem){
-        results_General.setVisible(false);
-        Content_Tab_General.setVisible(false);
-        results_General.remove(grid_General);
-        Content_Tab_General.remove(results_General);
-        grid_General.setItems(UpdatedItem);
-        results_General.add(grid_General);
-        Content_Tab_General.add(results_General);
-        results_General.setVisible(true);
-        Content_Tab_General.setVisible(true);
-        grid_General.getDataProvider().refreshItem(formulario_general.get_Dato_General());
+
+        grid_General.getDataProvider().refreshItem(UpdatedItem);
+        grid_General.getDataProvider().refreshAll();
     }
     public void UpdateGridMayores(DataMayor UpdatedItem){
-        results_Mayores.setVisible(false);
-        Content_tab_Mayor.setVisible(false);
-        results_Mayores.remove(grid_Mayor);
-        Content_tab_Mayor.remove(results_Mayores);
-        grid_Mayor.setItems(UpdatedItem);
-        results_Mayores.add(grid_Mayor);
-        Content_tab_Mayor.add(results_Mayores);
-        results_Mayores.setVisible(true);
-        Content_tab_Mayor.setVisible(true);
+
         grid_Mayor.getDataProvider().refreshItem(formulario_mayores.get_Dato_General());
+        grid_Mayor.getDataProvider().refreshAll();
     }
 
-    public Data getLastItem() {
-        List<Data> allItems = grid_General.getDataProvider().fetch(new Query<>()).collect(Collectors.toList());
-        lastItem = allItems.stream().sorted((i1,i2) -> i2.getCod().compareTo(i1.getCod())).findFirst().orElse(null);
-        return lastItem;
-    }
+    //public Data getLastItem() {
+       // List<Data> allItems = grid_General.getDataProvider().fetch(new Query<>()).collect(Collectors.toList());
+        //lastItem = allItems.stream().sorted((i1,i2) -> i2.getCod().compareTo(i1.getCod())).findFirst().orElse(null);
+      //  return lastItem;
+
+    //}
 
 
     /*public void onSaveEvent(Data updatedItem) {
