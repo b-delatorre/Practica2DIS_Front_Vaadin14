@@ -13,6 +13,8 @@ public class Data {
     private float tasaTotal;
     @SerializedName(value = "casos_confirmados_totales", alternate = "casos")
     private int casos;
+    @SerializedName(value = "casos_confirmados_ultimos_14dias", alternate = "casos14")
+    private int casos14;
     @SerializedName(value = "fecha_informe", alternate = "fecha")
     private String fecha;
 
@@ -22,6 +24,15 @@ public class Data {
         this.tasa14 = tasa14;
         this.tasaTotal = tasaTotal;
         this.casos = casos;
+        this.fecha = fecha;
+    }
+    public Data(String cod, String zona, float tasa14, float tasaTotal, int casos, int casos14, String fecha) {
+        this.cod = cod;
+        this.zona = zona;
+        this.tasa14 = tasa14;
+        this.tasaTotal = tasaTotal;
+        this.casos = casos;
+        this.casos14 = casos14;
         this.fecha = fecha;
     }
 
@@ -71,5 +82,13 @@ public class Data {
 
     public void setFecha(String fecha) {
         this.fecha = fecha;
+    }
+
+    public int getCasos14() {
+        return casos14;
+    }
+
+    public void setCasos14(int casos14) {
+        this.casos14 = casos14;
     }
 }

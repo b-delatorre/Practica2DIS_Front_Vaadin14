@@ -21,4 +21,13 @@ public class APIMenor {
         System.out.println(response.body());
         return response.body();
     }
+    public void setCovidMenor(String datos) throws URISyntaxException, IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(new URI("http://localhost:8090/changemenor"))
+                .POST(HttpRequest.BodyPublishers.ofString(datos))
+                .build();
+        HttpClient client = HttpClient.newHttpClient();
+        HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        String siu = response.toString();
+    }
 }

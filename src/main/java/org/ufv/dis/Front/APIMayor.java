@@ -21,5 +21,14 @@ public class APIMayor {
         System.out.println(response.body());
         return response.body();
     }
+    public void setCovidMayor(String datos) throws URISyntaxException, IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(new URI("http://localhost:8090/changemayor"))
+                .POST(HttpRequest.BodyPublishers.ofString(datos))
+                .build();
+        HttpClient client = HttpClient.newHttpClient();
+        HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        String siu = response.toString();
+    }
 
 }

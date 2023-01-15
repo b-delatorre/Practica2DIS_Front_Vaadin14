@@ -1,10 +1,8 @@
 package org.ufv.dis.Front;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.tabs.Tab;
 //import com.vaadin.flow.component.tabs.TabSheet;
-import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.router.PageTitle;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,6 +13,9 @@ import com.vaadin.flow.router.Route;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 
 @CssImport("./styles/shared-styles.css")
@@ -50,6 +51,7 @@ public class MainView extends VerticalLayout{
         inputs.add(comboBox);*/
 
         Grid<Data> grid_General= new Grid<>(Data.class,false);
+        grid_General.addColumn(Data::getCasos14).setHeader("Casos 14 dias");
         grid_General.addColumn(Data::getCasos).setHeader("Casos");
         grid_General.addColumn(Data::getCod).setHeader("Codigo");
         grid_General.addColumn(Data::getFecha).setHeader("Fecha");
@@ -89,7 +91,6 @@ public class MainView extends VerticalLayout{
         grid_General.setItems(service.leeCovidMenor()); //Obtenemos los elementos del grid de la llamada de la api
         results_General.add(grid_General);
         Content_Tab_General.add(nuevoRegistro_Gen, results_General,formulario_general); //Y los añadimos a la pestaña de datos generales
-
         //tab_General.add(Content_Tab_General);
 
         //Pestanas.add("Tasa acumulada poblacion general",Content_Tab_General);
@@ -127,8 +128,12 @@ public class MainView extends VerticalLayout{
                 formulario_general.TablaAFormGen(event.getValue());
                 Content_Tab_General.setSizeFull();
                 grid_General.getDataProvider().refreshItem(formulario_general.get_Dato_General());
-
-
+                List<Data> datosNew = grid_General.getDataProvider().fetch(new Query<>()).collect(Collectors.toList());
+                try {
+                    service.enviaCovidMenor(datosNew);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         //grid_General.getDataProvider().refreshItem(formulario_general.get_Dato_General());
@@ -141,7 +146,13 @@ public class MainView extends VerticalLayout{
             } else {
                 formulario_mayores.Tabla_A_FormMayores(event.getValue());
                 Content_tab_Mayor.setSizeFull();
-               // grid_Mayor.getDataProvider().refreshItem(formulario_mayores.get);
+                //grid_Mayor.getDataProvider().refreshItem(formulario_mayores.get);
+                List<DataMayor> datosNew2 = grid_Mayor.getDataProvider().fetch(new Query<>()).collect(Collectors.toList());
+                try {
+                    service.enviaCovidMayor(datosNew2);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
 
             }
         });
@@ -158,8 +169,7 @@ public class MainView extends VerticalLayout{
         Content_Tab_General.add(results_General);
         results_General.setVisible(true);
         Content_Tab_General.setVisible(true);
-
-
+        grid_General.getDataProvider().refreshItem(formulario_general.get_Dato_General());
     }
     /*public void onSaveEvent(Data updatedItem) {
 
