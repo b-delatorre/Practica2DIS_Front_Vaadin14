@@ -4,6 +4,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 //import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.PageTitle;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,20 +22,25 @@ import java.net.URISyntaxException;
 @PageTitle("Datos covid_19")
 @Route
 public class MainView extends VerticalLayout{
-
+    private  Grid<Data> grid_General= new Grid<>(Data.class,false);
+    private Grid<DataMayor> grid_Mayor= new Grid<>(DataMayor.class,false);
+    private FormCovid_General formulario_general=new FormCovid_General(this);
+    private FormCovid_Mayores formulario_mayores=new FormCovid_Mayores(this);
+    private VerticalLayout Content_Tab_General=new VerticalLayout();
+    private VerticalLayout results_General=new VerticalLayout();
+    private VerticalLayout mainView=new VerticalLayout();
     public MainView(@Autowired CovidService service) throws URISyntaxException, IOException, InterruptedException {
         //HorizontalLayout inputs=new HorizontalLayout();
         VerticalLayout results_General=new VerticalLayout();
         VerticalLayout results_Mayores=new VerticalLayout();
-        VerticalLayout Content_Tab_General=new VerticalLayout();  //Creamos el vertical layout que contendrá la pestaña de datos generales
+          //Creamos el vertical layout que contendrá la pestaña de datos generales
         VerticalLayout Content_tab_Mayor=new VerticalLayout();      //Creamos el vertical layout que contendrá la pestaña de datos mayores
-        VerticalLayout mainView=new VerticalLayout();
+
         //Tab tab_General = new Tab("Tasa acumulada poblacion general");
         //Tab tab_Mayores = new Tab("Tasa acumulada poblacion mayores de 65");
 
 
-        FormCovid_General formulario_general=new FormCovid_General(this);
-        FormCovid_Mayores formulario_mayores=new FormCovid_Mayores(this);
+
         FormCovid_General formulario_nuevoRegistro=new FormCovid_General(this);
 
         /*ComboBox<String> comboBox=new ComboBox<>("Seleccione el tipo de info....");
@@ -50,7 +56,8 @@ public class MainView extends VerticalLayout{
         grid_General.addColumn(Data::getTasa14).setHeader("Tasa 14 dias");
         grid_General.addColumn(Data::getTasaTotal).setHeader("Tasa Total");
         grid_General.addColumn(Data::getZona).setHeader("Zona");
-        Grid<DataMayor> grid_Mayor= new Grid<>(DataMayor.class,false);
+
+
         grid_Mayor.addColumn(DataMayor::getCasos).setHeader("Casos");
         grid_Mayor.addColumn(DataMayor::getCod).setHeader("Codigo");
         grid_Mayor.addColumn(DataMayor::getFecha).setHeader("Fecha");
@@ -97,6 +104,7 @@ public class MainView extends VerticalLayout{
             mainView.remove(Content_tab_Mayor);
             mainView.add(Content_Tab_General);
             add(mainView);
+
         });
 
         Boton_mayores.addClickListener(event -> {
@@ -123,6 +131,9 @@ public class MainView extends VerticalLayout{
 
             }
         });
+        //grid_General.getDataProvider().refreshItem(formulario_general.get_Dato_General());
+        //grid_General.getDataProvider().refreshAll();
+
         formulario_mayores.setVisible(false);
         grid_Mayor.asSingleSelect().addValueChangeListener(event -> {
             if (event.getValue() == null) {
@@ -136,4 +147,44 @@ public class MainView extends VerticalLayout{
         });
 
     }
+
+    public void UpdateGrid(Data UpdatedItem){
+        results_General.setVisible(false);
+        Content_Tab_General.setVisible(false);
+        results_General.remove(grid_General);
+        Content_Tab_General.remove(results_General);
+        grid_General.setItems(UpdatedItem);
+        results_General.add(grid_General);
+        Content_Tab_General.add(results_General);
+        results_General.setVisible(true);
+        Content_Tab_General.setVisible(true);
+
+
+    }
+    /*public void onSaveEvent(Data updatedItem) {
+
+
+        //Content_Tab_General.setSizeFull();
+        grid_General.getDataProvider().refreshItem(formulario_general.get_Dato_General());
+        grid_General.setItems(updatedItem);
+
+        grid_General.getDataProvider().refreshAll();
+        results_General.setVisible(false);
+        results_General.setVisible(true);
+        results_General.remove(grid_General);
+        results_General.add(grid_General);
+        Content_Tab_General.setVisible(false);
+        Content_Tab_General.setVisible(true);
+        Content_Tab_General.remove(results_General);
+        Content_Tab_General.add(results_General);
+        mainView.setVisible(false);
+        mainView.setVisible(true);
+        mainView.remove(Content_Tab_General);
+        mainView.add(Content_Tab_General);
+        mainView.setSizeFull();
+        Content_Tab_General.setSizeFull();
+
+
+        //grid_Mayor.getDataProvider().refreshItem(formulario_general.ge());
+    }*/
 }

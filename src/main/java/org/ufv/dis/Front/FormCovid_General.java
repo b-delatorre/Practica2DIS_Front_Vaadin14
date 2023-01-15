@@ -1,10 +1,13 @@
 package org.ufv.dis.Front;
 
 import com.vaadin.flow.component.ComponentEvent;
+import com.vaadin.flow.component.ComponentEventBus;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -25,6 +28,7 @@ public class FormCovid_General extends FormLayout {
 
     public FormCovid_General(MainView myUI) {
 
+
         this.myUI = myUI;
         setSizeUndefined();
         cod.setReadOnly(true);
@@ -42,7 +46,9 @@ public class FormCovid_General extends FormLayout {
 
         binder.bindInstanceFields(this);
 
-        Aceptar.addClickListener(e -> GuardarCambios());
+        Aceptar.addClickListener(e -> GuardarCambios(myUI));
+        //Aceptar.addClickListener(event -> onSaveButtonClick());
+
         //binder.addStatusChangeListener(e -> GuardarCambios().setEnabled(binder.isValid()));
 
     }
@@ -52,10 +58,13 @@ public class FormCovid_General extends FormLayout {
         binder.setBean(datoGeneral);
         setVisible(true);
     }
-    private void GuardarCambios() {
+    private void GuardarCambios(MainView UI) {
         try {
             binder.writeBean(dato_General);
             fireEvent(new SaveEvent(this, dato_General));
+            UI.UpdateGrid(dato_General);
+
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,5 +73,10 @@ public class FormCovid_General extends FormLayout {
     public Data get_Dato_General(){
         return dato_General;
     }
+   /* private void onSaveButtonClick() { //Avisa al mainview de que el boton guardar ha sido presionado para que actualice
+
+        //myUI.onSaveEvent(new SaveEvent(this, get_Dato_General()));
+        myUI.onSaveEvent(dato_General);
+    }*/
 
 }
