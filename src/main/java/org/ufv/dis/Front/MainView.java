@@ -1,7 +1,11 @@
 package org.ufv.dis.Front;
+import com.vaadin.flow.component.datetimepicker.DateTimePicker;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 //import com.vaadin.flow.component.tabs.TabSheet;
+import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.router.PageTitle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +17,7 @@ import com.vaadin.flow.router.Route;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,6 +48,7 @@ public class MainView extends VerticalLayout{
           //Creamos el vertical layout que contendrá la pestaña de datos generales
         VerticalLayout Content_tab_Mayor=new VerticalLayout();      //Creamos el vertical layout que contendrá la pestaña de datos mayores
 
+
         //Tab tab_General = new Tab("Tasa acumulada poblacion general");
         //Tab tab_Mayores = new Tab("Tasa acumulada poblacion mayores de 65");
 
@@ -72,6 +78,7 @@ public class MainView extends VerticalLayout{
         Button nuevoRegistro_Gen = new Button("Nuevo registro", click -> formulario_nuevoRegistro.setVisible(true));
         Button nuevoRegistro_May=new Button("Nuevo registro",click -> formulario_mayores.setVisible(true));
 
+
         // Creamos las pestañas
         //Tab tab_General = new Tab("Tasa acumulada poblacion general");
         //Tab tab_Mayores = new Tab("Tasa acumulada poblacion mayores de 65");
@@ -80,6 +87,7 @@ public class MainView extends VerticalLayout{
         tabBar.add(Boton_General);
         Button Boton_mayores = new Button("Tasa acumulada poblacion mayores de 65");
         tabBar.add(Boton_mayores);
+
 
         VerticalLayout firstTabLayout = new VerticalLayout();
         VerticalLayout secondTabLayout = new VerticalLayout();
@@ -160,6 +168,49 @@ public class MainView extends VerticalLayout{
             }
         });
 
+        //Con el botón de nuevo registro, se crea un modal para añadir la nueva entrada
+        nuevoRegistro_Gen.addClickListener(e -> {
+            List<Data> datosNew = grid_General.getDataProvider().fetch(new Query<>()).collect(Collectors.toList());
+            ArrayList<Data> finalDatosFinal = (ArrayList<Data>) datosNew;
+            Dialog modal = new Dialog();
+            HorizontalLayout layoutCampo = new HorizontalLayout();
+            VerticalLayout botonesVertical = new VerticalLayout();
+            HorizontalLayout botonesHori = new HorizontalLayout();
+            modal.getElement().setAttribute("aria-label", "Nueva entrada");
+            TextField zonaNueva = new TextField("Zona");
+            IntegerField tasa14Nueva = new IntegerField("Tasa los primeros 14 días");
+            IntegerField tasaTotalNueva = new IntegerField("Tasa total");
+            IntegerField casosNuevo = new IntegerField("Casos");
+            IntegerField casos14Nuevo = new IntegerField("Casos últimos 14 días");
+            DateTimePicker fechaNueva = new DateTimePicker("Fecha");
+
+            Button save = new Button("Añadir");
+            save.addClickListener(eve -> {
+                int newCode = Integer.parseInt(finalDatosFinal.get(finalDatosFinal.size() - 1).getCod());
+                newCode++;
+                String fechaNew = String.valueOf(fechaNueva.getValue());
+                fechaNew = fechaNew.replaceAll("-", "/");
+                fechaNew = fechaNew.replaceAll("T", " ");
+                fechaNew = fechaNew.concat(":00");
+                Data nuevaData = new Data(String.valueOf(newCode), zonaNueva.getValue(), tasa14Nueva.getValue(), tasaTotalNueva.getValue(), casosNuevo.getValue(), casos14Nuevo.getValue(),fechaNew);
+                finalDatosFinal.add(nuevaData);
+                grid_General.setItems(finalDatosFinal);
+                try {
+                    service.enviaCovidMenor(grid_General.getDataProvider().fetch(new Query<>()).collect(Collectors.toList()));
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+                modal.close();
+            });
+            Button cancel = new Button("Cancelar", event -> {
+                modal.close();
+            });
+            layoutCampo.add(zonaNueva, tasa14Nueva, tasaTotalNueva, casosNuevo, casos14Nuevo,fechaNueva);
+            botonesHori.add(save, cancel);
+            botonesVertical.add(botonesHori);
+            modal.add(layoutCampo, botonesVertical);
+            modal.open();
+        });
     }
 
     public void UpdateGrid(Data UpdatedItem){
