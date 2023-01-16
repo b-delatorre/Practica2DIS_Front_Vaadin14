@@ -10,9 +10,11 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
+import com.vaadin.flow.router.Route;
 
 public class FormCovid_General extends FormLayout {
     private TextField cod = new TextField("codigo_geometria");
@@ -46,7 +48,6 @@ public class FormCovid_General extends FormLayout {
         HorizontalLayout botones = new HorizontalLayout(Aceptar, Cancelar);
         add(cod, zona, tasa14, tasaTotal, casos, casos, casos14,botones);
 
-
         binder.bindInstanceFields(this);
     }
 
@@ -57,5 +58,8 @@ public class FormCovid_General extends FormLayout {
     }
     public Data get_Dato_General(){
         return dato_General;
+    }
+    public Button getAceptar() {
+        return Aceptar;
     }
 }

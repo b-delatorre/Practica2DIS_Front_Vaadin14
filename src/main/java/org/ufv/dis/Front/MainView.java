@@ -3,7 +3,7 @@ import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-//import com.vaadin.flow.component.tabs.TabSheet;
+
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.Query;
@@ -18,7 +18,6 @@ import com.vaadin.flow.router.Route;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,6 +113,9 @@ public class MainView extends VerticalLayout{
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
+                formulario_general.getAceptar().addClickListener(event1 -> {
+                    grid_General.getDataProvider().refreshItem(formulario_general.get_Dato_General());
+                });
             }
         });
 
@@ -131,7 +133,9 @@ public class MainView extends VerticalLayout{
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-
+                formulario_mayores.getAceptar().addClickListener(event1 -> {
+                    grid_Mayor.getDataProvider().refreshItem(formulario_mayores.get_Dato_General());
+                });
             }
         });
 

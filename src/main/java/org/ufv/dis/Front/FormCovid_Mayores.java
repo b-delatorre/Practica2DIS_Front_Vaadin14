@@ -49,4 +49,8 @@ public class FormCovid_Mayores extends FormLayout {
     public DataMayor get_Dato_General(){
         return dato_Mayor;
     }
+
+    public Button getAceptar() {
+        return Aceptar;
+    }
 }
