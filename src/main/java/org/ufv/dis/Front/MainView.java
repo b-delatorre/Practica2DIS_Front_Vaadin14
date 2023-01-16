@@ -31,19 +31,17 @@ public class MainView extends VerticalLayout{
     private Grid<DataMayor> grid_Mayor= new Grid<>(DataMayor.class,false);
     private FormCovid_General formulario_general=new FormCovid_General(this);
     private FormCovid_Mayores formulario_mayores=new FormCovid_Mayores(this);
-    private FormCovid_Registro formulario_nuevoRegistro;
     private VerticalLayout Content_Tab_General=new VerticalLayout();
     private VerticalLayout results_General=new VerticalLayout();
     private VerticalLayout mainView=new VerticalLayout();
 
-    private Data lastItem;
 
     public MainView(@Autowired CovidService service) throws URISyntaxException, IOException, InterruptedException {
 
         VerticalLayout results_General=new VerticalLayout();
         VerticalLayout results_Mayores=new VerticalLayout();
 
-          //Creamos el vertical layout que contendrá la pestaña de datos generales
+        //Creamos el vertical layout que contendrá la pestaña de datos generales
         VerticalLayout Content_tab_Mayor=new VerticalLayout();      //Creamos el vertical layout que contendrá la pestaña de datos mayores
 
         Grid<Data> grid_General= new Grid<>(Data.class,false);
@@ -61,8 +59,7 @@ public class MainView extends VerticalLayout{
         grid_Mayor.addColumn(DataMayor::getTasa14).setHeader("Tasa 14 dias");
         grid_Mayor.addColumn(DataMayor::getZona).setHeader("Zona");
 
-        formulario_nuevoRegistro=new FormCovid_Registro(this);
-        Button nuevoRegistro_Gen = new Button("Nuevo registro", click -> formulario_nuevoRegistro.setVisible(true));
+        Button nuevoRegistro_Gen = new Button("Nuevo registro");
 
         // Creamos las pestañas
         HorizontalLayout tabBar = new HorizontalLayout();

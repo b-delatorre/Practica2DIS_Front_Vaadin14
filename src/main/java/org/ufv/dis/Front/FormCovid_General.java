@@ -1,20 +1,13 @@
 package org.ufv.dis.Front;
 
-import com.vaadin.flow.component.ComponentEvent;
-import com.vaadin.flow.component.ComponentEventBus;
 import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.grid.editor.Editor;
-import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.binder.ValidationException;
-import com.vaadin.flow.router.Route;
 
 public class FormCovid_General extends FormLayout {
     private TextField cod = new TextField("codigo_geometria");
@@ -30,11 +23,11 @@ public class FormCovid_General extends FormLayout {
     private Data dato_General;
     private Binder<Data> binder = new Binder<>(Data.class);
 
+
     public FormCovid_General(MainView myUI) {
         this.myUI = myUI;
         setSizeUndefined();
         cod.setReadOnly(true);
-        add(cod, zona, tasa14);
 
         Aceptar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Aceptar.addClickShortcut(Key.ENTER);
