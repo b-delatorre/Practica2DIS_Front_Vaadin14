@@ -16,6 +16,7 @@ public class FormCovid_General extends FormLayout {
     private TextField tasaTotal = new TextField("Incidencia_Total");
     private TextField casos = new TextField("Total_Casos");
     private TextField casos14=new TextField("Casos 14 dias");
+    private TextField fecha=new TextField("Fecha");
 
     private Button Aceptar = new Button("Aceptar");
     private Button Cancelar = new Button("Cancelar");
@@ -39,7 +40,7 @@ public class FormCovid_General extends FormLayout {
         Cancelar.addClickListener(e -> setVisible(false));
 
         HorizontalLayout botones = new HorizontalLayout(Aceptar, Cancelar);
-        add(cod, zona, tasa14, tasaTotal, casos, casos, casos14,botones);
+        add(cod, zona, tasa14, tasaTotal, casos, casos, casos14,fecha,botones);
 
         binder.bindInstanceFields(this);
     }
