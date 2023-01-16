@@ -36,8 +36,6 @@ public class MainView extends VerticalLayout{
     private VerticalLayout Content_Tab_General=new VerticalLayout();
     private VerticalLayout results_General=new VerticalLayout();
     private VerticalLayout mainView=new VerticalLayout();
-    //private VerticalLayout results_Mayores=new VerticalLayout();
-   // private VerticalLayout Content_tab_Mayor=new VerticalLayout();
 
     private Data lastItem;
 
@@ -80,7 +78,6 @@ public class MainView extends VerticalLayout{
         results_General.add(grid_General);
         Content_Tab_General.add(nuevoRegistro_Gen, results_General,formulario_general); //Y los añadimos a la pestaña de datos generales
 
-        //Pestanas.add("Tasa acumulada poblacion general",Content_Tab_General);
         //Repetimos lo anterior pero para los datos de personas mayores
         results_Mayores.removeAll();
         grid_Mayor.setItems(service.leeCovidMayor());
