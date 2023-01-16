@@ -16,7 +16,7 @@ public class FormCovid_Registro extends FormLayout {
     private TextField casos = new TextField("Total_Casos");
 
     private Button Aceptar = new Button("Aceptar");
-    private Button Cancelar = new Button("Cancelar", e -> setVisible(false));
+    private Button Cancelar = new Button("Cancelar");
     private MainView myUI;
     private Data dato_General;
     private Binder<Data> binder = new Binder<>(Data.class);
@@ -25,10 +25,6 @@ public class FormCovid_Registro extends FormLayout {
         this.myUI = myUI;
         setSizeUndefined();
         cod.setReadOnly(true);
-        //String codLast = myUI.getLastItem().getCod();
-       // int codNew = Integer.parseInt(codLast) + 1;
-        //cod.setValue(String.valueOf(codNew));
-        //add(cod, zona, tasa14);
 
         Aceptar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Aceptar.addClickShortcut(Key.ENTER);
@@ -36,17 +32,13 @@ public class FormCovid_Registro extends FormLayout {
         Cancelar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Cancelar.addClickShortcut(Key.ENTER);
 
-        //Aceptar.addClickListener(e -> setVisible(false));
         HorizontalLayout botones = new HorizontalLayout(Aceptar, Cancelar);
         add(cod, zona, tasa14, tasaTotal, casos, casos, botones);
 
+        Aceptar.addClickListener(e -> setVisible(false));
+        Cancelar.addClickListener(e -> setVisible(false));
+
         binder.bindInstanceFields(this);
-
-        Aceptar.addClickListener(e -> GuardarCambios(myUI));
-        //Aceptar.addClickListener(event -> onSaveButtonClick());
-
-        //binder.addStatusChangeListener(e -> GuardarCambios().setEnabled(binder.isValid()));
-
     }
 
     public void TablaAFormGen(Data datoGeneral) { //Si el usuario hace click en alguna de las filas entonces se muestra y se copian los datos del que esta seleccionado en el formulario
@@ -54,23 +46,8 @@ public class FormCovid_Registro extends FormLayout {
         binder.setBean(datoGeneral);
         setVisible(true);
     }
-    private void GuardarCambios(MainView UI) {
-        try {
-            binder.writeBean(dato_General);
-            fireEvent(new SaveEventRegistro(this, dato_General));
-            UI.UpdateGrid(dato_General);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     public Data get_Dato_General(){
         return dato_General;
     }
-   /* private void onSaveButtonClick() { //Avisa al mainview de que el boton guardar ha sido presionado para que actualice
-
-        //myUI.onSaveEvent(new SaveEvent(this, get_Dato_General()));
-        myUI.onSaveEvent(dato_General);
-    }*/
 
 }

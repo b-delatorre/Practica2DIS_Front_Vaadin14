@@ -16,7 +16,7 @@ public class FormCovid_Mayores extends FormLayout {
     private TextField casos =new TextField("Casos >60 años 14 dias");
 
     private Button Aceptar=new Button("Aceptar");
-    private Button Cancelar=new Button("Cancelar", e->setVisible(false));
+    private Button Cancelar=new Button("Cancelar");
     private MainView myUI;
     private DataMayor dato_Mayor;
     private Binder<DataMayor> binder=new Binder<>(DataMayor.class);
@@ -33,6 +33,7 @@ public class FormCovid_Mayores extends FormLayout {
         Cancelar.addClickShortcut(Key.ENTER);
 
         Aceptar.addClickListener(e -> setVisible(false));
+        Cancelar.addClickListener(e -> setVisible(false));
 
         HorizontalLayout botones=new HorizontalLayout(Aceptar,Cancelar);
         cod.setReadOnly(true);
@@ -44,16 +45,6 @@ public class FormCovid_Mayores extends FormLayout {
         this.dato_Mayor = dataMayor;
         binder.setBean(dataMayor);
         setVisible(true);
-    }
-    private void GuardarCambios(MainView UI) {
-        try {
-            binder.writeBean(dato_Mayor);
-            fireEvent(new SaveEventMayor(this, dato_Mayor));
-            UI.UpdateGridMayores(dato_Mayor);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
     public DataMayor get_Dato_General(){
         return dato_Mayor;

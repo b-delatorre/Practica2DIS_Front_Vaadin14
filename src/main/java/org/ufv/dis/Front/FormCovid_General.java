@@ -23,14 +23,12 @@ public class FormCovid_General extends FormLayout {
     private TextField casos14=new TextField("Casos 14 dias");
 
     private Button Aceptar = new Button("Aceptar");
-    private Button Cancelar = new Button("Cancelar", e -> setVisible(false));
+    private Button Cancelar = new Button("Cancelar");
     private MainView myUI;
     private Data dato_General;
     private Binder<Data> binder = new Binder<>(Data.class);
 
     public FormCovid_General(MainView myUI) {
-
-
         this.myUI = myUI;
         setSizeUndefined();
         cod.setReadOnly(true);
@@ -43,17 +41,13 @@ public class FormCovid_General extends FormLayout {
         Cancelar.addClickShortcut(Key.ENTER);
 
         Aceptar.addClickListener(e -> setVisible(false));
+        Cancelar.addClickListener(e -> setVisible(false));
+
         HorizontalLayout botones = new HorizontalLayout(Aceptar, Cancelar);
         add(cod, zona, tasa14, tasaTotal, casos, casos, casos14,botones);
 
 
         binder.bindInstanceFields(this);
-
-        Aceptar.addClickListener(e -> GuardarCambios(myUI));
-        //Aceptar.addClickListener(event -> onSaveButtonClick());
-
-        //binder.addStatusChangeListener(e -> GuardarCambios().setEnabled(binder.isValid()));
-
     }
 
     public void TablaAFormGen(Data datoGeneral) { //Si el usuario hace click en alguna de las filas entonces se muestra y se copian los datos del que esta seleccionado en el formulario
@@ -61,23 +55,7 @@ public class FormCovid_General extends FormLayout {
         binder.setBean(datoGeneral);
         setVisible(true);
     }
-    private void GuardarCambios(MainView UI) {
-        try {
-            binder.writeBean(dato_General);
-            fireEvent(new SaveEvent(this, dato_General));
-            UI.UpdateGrid(dato_General);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     public Data get_Dato_General(){
         return dato_General;
     }
-   /* private void onSaveButtonClick() { //Avisa al mainview de que el boton guardar ha sido presionado para que actualice
-
-        //myUI.onSaveEvent(new SaveEvent(this, get_Dato_General()));
-        myUI.onSaveEvent(dato_General);
-    }*/
-
 }
